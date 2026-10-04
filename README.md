@@ -2,8 +2,17 @@
 
 Sistema de gerenciamento de biblioteca em Python: cadastro de livros e alunos, empréstimos e devoluções com cálculo de multa. Usa MongoDB como banco e uma interface de linha de comando (CLI) como porta de uso.
 
+## Integrantes
+
+- Açussena Macedo Mautone - 552568
+- Felipe Heilmann Marques - 551026
+- Felipe Voidela Toledo - 98595
+- Carlos Eduardo Caramante Ribeiro - 552159
+- Ian Cancian Nachtergaele - 98387
+
 ## Sumário
 
+- [Integrantes](#integrantes)
 - [Requisitos](#requisitos)
 - [Configuração](#configuração)
 - [Como rodar](#como-rodar)
