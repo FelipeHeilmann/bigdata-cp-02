@@ -1,14 +1,13 @@
 from pymongo import MongoClient
+from src.infra.config import MONGO_DATABASE, MONGO_URI
 from src.application.dao.book_dao import BookDao
 from src.application.models.book import Book
 
-MONGO_URI = "mongodb://user:ZHNhZGFkYWRhc2Rh@localhost:27017/?authSource=admin"
-DATABASE_NAME = "library"
 
 class BookDaoMongo(BookDao):
     def __init__(self: "BookDaoMongo") -> None:
         client = MongoClient(MONGO_URI)
-        self.collection = client[DATABASE_NAME]["books"]
+        self.collection = client[MONGO_DATABASE]["books"]
 
     def list_books(self: "BookDaoMongo") -> list[Book]:
         return [self._to_model(doc) for doc in self.collection.find()]

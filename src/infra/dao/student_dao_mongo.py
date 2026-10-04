@@ -1,14 +1,13 @@
 from pymongo import MongoClient
+from src.infra.config import MONGO_DATABASE, MONGO_URI
 from src.application.dao.student_dao import StudentDao
 from src.application.models.student import Student
 
-MONGO_URI = "mongodb://user:ZHNhZGFkYWRhc2Rh@localhost:27017/?authSource=admin"
-DATABASE_NAME = "library"
 
 class StudentDaoMongo(StudentDao):
     def __init__(self: "StudentDaoMongo") -> None:
         client = MongoClient(MONGO_URI)
-        self.collection = client[DATABASE_NAME]["students"]
+        self.collection = client[MONGO_DATABASE]["students"]
 
     def get_by_id(self: "StudentDaoMongo", id: str) -> Student | None:
         doc = self.collection.find_one({"_id": id})

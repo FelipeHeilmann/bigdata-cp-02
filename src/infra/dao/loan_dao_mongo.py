@@ -1,16 +1,15 @@
 from pymongo import MongoClient
+from src.infra.config import MONGO_DATABASE, MONGO_URI
 from src.application.dao.loan_dao import LoanDao
 from src.application.models.loan import Loan
 from datetime import datetime, timedelta
 from typing import List
 
-MONGO_URI = "mongodb://user:ZHNhZGFkYWRhc2Rh@localhost:27017/?authSource=admin"
-DATABASE_NAME = "library"
 
 class LoanDaoMongo(LoanDao):
     def __init__(self: "LoanDaoMongo") -> None:
         client = MongoClient(MONGO_URI)
-        self.collection = client[DATABASE_NAME]["loans"]
+        self.collection = client[MONGO_DATABASE]["loans"]
 
     def get_by_id(self: "LoanDao", id: str) -> Loan | None:
         doc = self.collection.find_one({"_id": id})
