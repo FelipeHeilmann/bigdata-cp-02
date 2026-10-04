@@ -1,10 +1,10 @@
 from __future__ import annotations
-from src.application.dao.book_dao import BookDAO
+from src.application.dao.book_dao import BookDao
 from src.application.models.book import Book
 from dataclasses import dataclass
 
 class CreateBook:
-    def __init__(self: "CreateBook", book_dao: "BookDAO") -> None:
+    def __init__(self: "CreateBook", book_dao: "BookDao") -> None:
         self.book_dao = book_dao
 
     def execute(self: "CreateBook", input: Input) -> Output:

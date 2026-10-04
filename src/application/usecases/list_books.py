@@ -1,10 +1,10 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
-from src.application.dao.book_dao import BookDAO
+from src.application.dao.book_dao import BookDao
 
 class ListBooks:
-    def __init__(self: "ListBooks", book_dao: "BookDAO") -> None:
+    def __init__(self: "ListBooks", book_dao: "BookDao") -> None:
         self.book_dao = book_dao
 
     def execute(self: "ListBooks") -> List[Output]:

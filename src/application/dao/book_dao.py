@@ -2,19 +2,23 @@ from abc import ABC, abstractmethod
 from typing import List
 from src.application.models.book import Book
 
-class BookDAO(ABC):
+class BookDao(ABC):
     @abstractmethod
-    def list_books(self: "BookDAO") -> List[Book]:
+    def list_books(self: "BookDao") -> List[Book]:
         pass
 
     @abstractmethod
-    def get_book_by_isbn(self: "BookDAO", isbn: str) -> Book | None:
+    def get_book_by_isbn(self: "BookDao", isbn: str) -> Book | None:
         pass
 
     @abstractmethod
-    def save(self: "BookDAO", book: Book) -> None:
+    def save(self: "BookDao", book: Book) -> None:
         pass
 
     @abstractmethod
-    def update(self: "BookDAO", book: Book) -> None:
+    def update(self: "BookDao", book: Book) -> None:
+        pass
+
+    @abstractmethod
+    def remove(self: "BookDao", book: Book) -> None:
         pass

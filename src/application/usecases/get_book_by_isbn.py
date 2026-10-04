@@ -1,9 +1,9 @@
 from __future__ import annotations
-from src.application.dao.book_dao import BookDAO
+from src.application.dao.book_dao import BookDao
 from dataclasses import dataclass
 
 class GetBookByISBN:
-    def __init__(self: "GetBookByISBN", book_dao: "BookDAO") -> None:
+    def __init__(self: "GetBookByISBN", book_dao: "BookDao") -> None:
         self.book_dao = book_dao
 
     def execute(self, isbn: str) -> "Output":

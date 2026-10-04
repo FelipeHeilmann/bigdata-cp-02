@@ -1,7 +1,7 @@
-from src.application.dao.book_dao import BookDAO
+from src.application.dao.book_dao import BookDao
 from src.application.models.book import Book
 
-class BookDaoMemory(BookDAO):
+class BookDaoMemory(BookDao):
     def __init__(self: "BookDaoMemory") -> None:
         self.books = [
             Book(
@@ -41,3 +41,6 @@ class BookDaoMemory(BookDAO):
             if b.isbn == book.isbn:
                 self.books[i] = book
                 return
+            
+    def remove(self: "BookDaoMemory", book: Book) -> None:
+        self.books = [b for b in self.books if b.isbn != book.isbn]
