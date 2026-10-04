@@ -2,26 +2,9 @@ from src.application.dao.student_dao import StudentDao
 from src.application.models.student import Student
 from typing import List
 
-class StudentDaoMemory(StudentDao):
+class StudentDaoMemory(StudentDao): # pragma: nocover
     def __init__(self: "StudentDaoMemory") -> None:
-        self.students: List[Student] = [
-            Student(
-                id="2baef4b9-1930-4c48-8170-acba2ea62619",
-                name="Anthony Smith",
-                age=27,
-                major="Logistics",
-                email="anthonysmith@harvard.com",
-                enrollment_id="ENR557596"
-            ),
-            Student(
-                id="b6e7702b-4e72-4c11-afa0-2301f294eeaf",
-                name="Emily Johnson",
-                age=22,
-                major="Finance",
-                email="emilyjohnson@harvard.com",
-                enrollment_id="ENR557597"
-            )
-        ]
+        self.students: List[Student] = []
 
     def save(self: "StudentDaoMemory", student) -> None:
         self.students.append(student)

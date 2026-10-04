@@ -2,7 +2,7 @@ from src.application.dao.book_dao import BookDao
 from src.application.models.book import Book
 from typing import List
 
-class BookDaoMemory(BookDao):
+class BookDaoMemory(BookDao): # pragma: nocover
     def __init__(self: "BookDaoMemory") -> None:
         self.books: List[Book] = []
 

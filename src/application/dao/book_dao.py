@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 from src.application.models.book import Book
 
-class BookDao(ABC):
+class BookDao(ABC): # pragma: nocover
     @abstractmethod
     def list_books(self: "BookDao") -> List[Book]:
         pass

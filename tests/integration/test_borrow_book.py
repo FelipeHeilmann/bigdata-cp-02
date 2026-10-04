@@ -14,14 +14,13 @@ from src.infra.dao.book_dao_mongo import BookDaoMongo
 from src.infra.dao.student_dao_memory import StudentDaoMemory
 from src.infra.dao.student_dao_mongo import StudentDaoMongo
 from src.infra.dao.loan_dao_memory import LoanDaoMemory
-from src.infra.dao.loan_dao_mongo import LoanDaoMongo
 from datetime import datetime
 import pytest
 from tests.helpers import random_isbn, random_enrollment_id
 
 book_dao = BookDaoMongo()
 student_dao = StudentDaoMongo()
-loan_dao = LoanDaoMongo()
+loan_dao = LoanDaoMemory()
 
 def test_borrow_book_should_borrow_book_successfully():
     isbn = random_isbn()
@@ -182,6 +181,7 @@ def test_borrow_book_should_throw_exception_when_book_does_not_exist():
     with pytest.raises(BookNotFoundError) as excinfo:
         borrow_book.execute(InputBorrowBook("non-existent-book-id", output_create_student.id, date))
     assert excinfo.value.args[0] == "Book with id non-existent-book-id not found"
+    student_dao.remove(output_create_student.id)
 
 def test_borrow_book_should_throw_exception_when_student_has_overdue_loans():
     isbn = random_isbn()

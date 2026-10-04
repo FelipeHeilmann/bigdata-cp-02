@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from src.application.models.student import Student
 
-class StudentDao(ABC):
+class StudentDao(ABC): # pragma: nocover
     @abstractmethod
     def save(self: "StudentDao", student: Student) -> None:
         pass

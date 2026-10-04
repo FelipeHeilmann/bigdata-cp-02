@@ -1,49 +1,57 @@
-class InvalidInputError(Exception):
+class ApplicationError(Exception):
+    pass
+
+class InvalidInputError(ApplicationError):
     def __init__(self, message: str):
         self.message = message
         super().__init__(self.message)
 
-class BookCurrentlyBorrowedError(Exception):
+class BookCurrentlyBorrowedError(ApplicationError):
     def __init__(self, field: str, value: str):
         self.message = f"Book with {field} {value} is currently borrowed and cannot be deleted"
         super().__init__(self.message)
 
-class BookAlreadyReturnedError(Exception):
+class BookAlreadyReturnedError(ApplicationError):
     def __init__(self):
         self.message = "Book has already been returned"
         super().__init__(self.message)
 
-class BookNotAvailableError(Exception):
+class BookNotAvailableError(ApplicationError):
     def __init__(self):
         self.message = "Book is not available"
         super().__init__(self.message)
 
-class BookNotFoundError(Exception):
+class BookNotFoundError(ApplicationError):
     def __init__(self, field: str, value: str):
         self.message = f"Book with {field} {value} not found"
         super().__init__(self.message)
 
-class BookAlreadyExistsError(Exception):
+class BookAlreadyExistsError(ApplicationError):
     def __init__(self, field: str, value: str):
         self.message = f"Book with {field} {value} already exists"
         super().__init__(self.message)
 
-class StudentNotFoundError(Exception):
+class StudentNotFoundError(ApplicationError):
     def __init__(self, field: str, value: str):
         self.message = f"Student with {field} {value} not found"
         super().__init__(self.message)
 
-class StudentHasMoreThanThreeActiveLoansError(Exception):
+class StudentHasMoreThanThreeActiveLoansError(ApplicationError):
     def __init__(self):
         self.message = "Student has more than 3 active loans"
         super().__init__(self.message)
 
-class StudentHasOverdueLoansError(Exception):
+class StudentHasOverdueLoansError(ApplicationError):
     def __init__(self):
         self.message = "Student has overdue loans"
         super().__init__(self.message)
 
-class StudentAlreadyExistsError(Exception):
+class StudentAlreadyExistsError(ApplicationError):
     def __init__(self, field: str, value: str):
         self.message = f"Student with {field} {value} already exists"
+        super().__init__(self.message)
+
+class LoanNotFoundError(ApplicationError):
+    def __init__(self, id: str):
+        self.message = f"Loan with id {id} not found"
         super().__init__(self.message)

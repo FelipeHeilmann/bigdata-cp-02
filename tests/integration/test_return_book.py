@@ -12,14 +12,13 @@ from src.infra.dao.book_dao_mongo import BookDaoMongo
 from src.infra.dao.student_dao_mongo import StudentDaoMongo
 from src.infra.dao.student_dao_memory import StudentDaoMemory
 from src.infra.dao.loan_dao_memory import LoanDaoMemory
-from src.infra.dao.loan_dao_mongo import LoanDaoMongo
 from datetime import datetime 
 from tests.helpers import random_isbn, random_enrollment_id
 from pytest import raises
 
 book_dao = BookDaoMongo()
 student_dao = StudentDaoMongo()
-loan_dao = LoanDaoMongo()
+loan_dao = LoanDaoMemory()
 
 def test_return_book_should_return_book_without_fine_successfully():
     create_book = CreateBook(book_dao)

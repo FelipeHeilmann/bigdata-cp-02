@@ -3,13 +3,17 @@ from src.application.models.loan import Loan
 from datetime import datetime
 from typing import List
 
-class LoanDao(ABC):
+class LoanDao(ABC): # pragma: nocover
     @abstractmethod
     def save(self: "LoanDao", loan: Loan) -> None:
         pass
 
     @abstractmethod
     def get_by_id(self: "LoanDao", id: str) -> Loan | None:
+        pass
+
+    @abstractmethod
+    def list_loans(self: "LoanDao") -> List[Loan]:
         pass
 
     @abstractmethod

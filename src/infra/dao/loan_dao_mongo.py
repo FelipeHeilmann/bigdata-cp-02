@@ -19,6 +19,9 @@ class LoanDaoMongo(LoanDao):
     def save(self: "LoanDao", loan: Loan) -> None:
         self.collection.insert_one(self._to_document(loan))
 
+    def list_loans(self: "LoanDaoMongo") -> List[Loan]:
+        return [self._to_model(doc) for doc in self.collection.find()]
+
     def get_active_loans_by_student_id(self: "LoanDao", student_id: str, date: datetime) -> List[Loan]:
         docs = self.collection.find({
             "student_id": student_id,

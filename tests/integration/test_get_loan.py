@@ -90,4 +90,5 @@ def test_get_loan_should_get_loan_successfully_with_status_overdue():
     assert output_get_loan.student.name == "John Doe"
     assert output_get_loan.date == "2024-06-01T10:25:10"
     assert output_get_loan.status == "overdue"  
+    book_dao.remove(output_create_book.id)
     student_dao.remove(output_create_student.id)

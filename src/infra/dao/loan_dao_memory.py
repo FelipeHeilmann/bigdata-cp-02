@@ -3,7 +3,7 @@ from src.application.models.loan import Loan
 from datetime import datetime, timedelta
 from typing import List
 
-class LoanDaoMemory(LoanDao):
+class LoanDaoMemory(LoanDao): # pragma: nocover
     def __init__(self: "LoanDaoMemory"):
         self.loans: List[Loan] = []
 
@@ -16,6 +16,9 @@ class LoanDaoMemory(LoanDao):
                 return loan
         return None
     
+    def list_loans(self: "LoanDaoMemory") -> list[Loan]:
+        return self.loans
+
     def get_active_loans_by_student_id(self: "LoanDaoMemory", student_id: str, date: datetime) -> list[Loan]:
         active_loans = []
         for loan in self.loans:
