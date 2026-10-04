@@ -8,7 +8,7 @@ class UpdateBook:
 
     def execute(self: "UpdateBook", input: Input) -> None:
         self._validate_input(input)
-        book = self.book_dao.get_book_by_isbn(input.isbn)
+        book = self.book_dao.get_by_isbn(input.isbn)
         if not book: raise KeyError(f"Book with ISBN {input.isbn} not found")
         book.title = input.title
         book.author = input.author

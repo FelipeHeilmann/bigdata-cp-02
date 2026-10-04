@@ -5,6 +5,6 @@ class RemoveBook:
         self.book_dao = book_dao
 
     def execute(self: "RemoveBook", isbn: str) -> None:
-        book = self.book_dao.get_book_by_isbn(isbn)
+        book = self.book_dao.get_by_isbn(isbn)
         if not book: raise ValueError(f"Book with ISBN {isbn} not found")
         self.book_dao.remove(book)

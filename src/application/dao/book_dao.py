@@ -8,7 +8,11 @@ class BookDao(ABC):
         pass
 
     @abstractmethod
-    def get_book_by_isbn(self: "BookDao", isbn: str) -> Book | None:
+    def get_by_isbn(self: "BookDao", isbn: str) -> Book | None:
+        pass
+
+    @abstractmethod
+    def get_by_id(self: "BookDao", id: str) -> Book | None:
         pass
 
     @abstractmethod

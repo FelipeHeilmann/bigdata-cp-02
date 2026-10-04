@@ -27,9 +27,15 @@ class BookDaoMemory(BookDao):
     def list_books(self: "BookDaoMemory") -> list[Book]:
         return self.books
     
-    def get_book_by_isbn(self: "BookDaoMemory", isbn: str) -> Book | None:
+    def get_by_isbn(self: "BookDaoMemory", isbn: str) -> Book | None:
         for book in self.books:
             if book.isbn == isbn:
+                return book
+        return None
+    
+    def get_by_id(self: "BookDaoMemory", id: str) -> Book | None:
+        for book in self.books:
+            if book.get_id() == id:
                 return book
         return None
     

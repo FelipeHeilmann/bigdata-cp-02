@@ -9,7 +9,7 @@ class CreateBook:
 
     def execute(self: "CreateBook", input: Input) -> Output:
         self._validate_input(input)
-        book_exists = self.book_dao.get_book_by_isbn(input.isbn)
+        book_exists = self.book_dao.get_by_isbn(input.isbn)
         if book_exists: raise KeyError(f"Book with ISBN {input.isbn} already exists")
         book = Book(
             isbn=input.isbn,

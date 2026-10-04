@@ -28,3 +28,9 @@ class StudentDaoMemory(StudentDao):
             if student.enrollment_id == enrollment_id:
                 return student
         return None
+    
+    def get_by_id(self: "StudentDaoMemory", id: str) -> Student | None:
+        for student in self.students:
+            if student.get_id() == id:
+                return student
+        return None
