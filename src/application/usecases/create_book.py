@@ -1,0 +1,48 @@
+from __future__ import annotations
+from src.application.dao.book_dao import BookDAO
+from src.application.models.book import Book
+from dataclasses import dataclass
+
+class CreateBook:
+    def __init__(self: "CreateBook", book_dao: "BookDAO") -> None:
+        self.book_dao = book_dao
+
+    def execute(self: "CreateBook", input: Input) -> Output:
+        self._validate_input(input)
+        book_exists = self.book_dao.get_book_by_isbn(input.isbn)
+        if book_exists: raise KeyError(f"Book with ISBN {input.isbn} already exists")
+        book = Book(
+            isbn=input.isbn,
+            title=input.title,
+            author=input.author,
+            year=input.year,
+            category=input.category,
+            copies=input.copies,
+            available_copies=input.available_copies
+        )
+        self.book_dao.save(book)
+        return Output(id=book.get_id())
+    
+    def _validate_input(self: "CreateBook", input: Input) -> None:
+        if not input.isbn or not input.title or not input.author or not input.year or not input.category:
+            raise ValueError("Invalid input: All fields are required")
+        if input.copies <= 0 or input.available_copies <= 0:
+            raise ValueError("Invalid input: Copies and available copies must be non-negative")
+        if input.available_copies != input.copies:
+            raise ValueError("Invalid input: Copies and available copies must be equal")
+        if len(input.isbn) != 13 or not input.isbn.isdigit():
+            raise ValueError("Invalid input: ISBN must be a 13-digit number")
+
+@dataclass
+class Input:
+    isbn: str
+    title: str
+    author: str
+    category: str
+    year: str
+    copies: int
+    available_copies: int
+
+@dataclass
+class Output:
+    id: str

@@ -10,3 +10,7 @@ class BookDAO(ABC):
     @abstractmethod
     def get_book_by_isbn(self: "BookDAO", isbn: str) -> Book | None:
         pass
+
+    @abstractmethod
+    def save(self: "BookDAO", book: Book) -> None:
+        pass

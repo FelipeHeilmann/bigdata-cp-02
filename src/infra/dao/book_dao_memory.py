@@ -5,7 +5,7 @@ class BookDaoMemory(BookDAO):
     def __init__(self: "BookDaoMemory") -> None:
         self.books = [
             Book(
-                isbn="978-0132350884",
+                isbn="9781234567890",
                 title="Clean Code",
                 author="Robert C. Martin",
                 year="2008",
@@ -14,7 +14,7 @@ class BookDaoMemory(BookDAO):
                 available_copies=2
             ),
             Book(
-                isbn="978-0201616224",
+                isbn="9780201616224",
                 title="Implementing Domain-Driven Design",
                 author="Vaughn Vernon",
                 year="2013",
@@ -32,3 +32,6 @@ class BookDaoMemory(BookDAO):
             if book.isbn == isbn:
                 return book
         return None
+    
+    def save(self: "BookDaoMemory", book: Book) -> None:
+        self.books.append(book)
