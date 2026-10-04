@@ -6,5 +6,7 @@ class RemoveBook:
 
     def execute(self: "RemoveBook", isbn: str) -> None:
         book = self.book_dao.get_by_isbn(isbn)
+        if book and book.available_copies < book.copies:
+            raise ValueError(f"Cannot remove book with ISBN {isbn} because it is currently borrowed")
         if not book: raise ValueError(f"Book with ISBN {isbn} not found")
         self.book_dao.remove(book.id)
