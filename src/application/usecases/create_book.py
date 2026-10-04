@@ -2,6 +2,7 @@ from __future__ import annotations
 from src.application.dao.book_dao import BookDao
 from src.application.models.book import Book
 from dataclasses import dataclass
+from uuid import uuid4
 
 class CreateBook:
     def __init__(self: "CreateBook", book_dao: "BookDao") -> None:
@@ -12,6 +13,7 @@ class CreateBook:
         book_exists = self.book_dao.get_by_isbn(input.isbn)
         if book_exists: raise KeyError(f"Book with ISBN {input.isbn} already exists")
         book = Book(
+            id=str(uuid4()),
             isbn=input.isbn,
             title=input.title,
             author=input.author,
@@ -21,7 +23,7 @@ class CreateBook:
             available_copies=input.available_copies
         )
         self.book_dao.save(book)
-        return Output(id=book.get_id())
+        return Output(id=book.id)
     
     def _validate_input(self: "CreateBook", input: Input) -> None:
         if not input.isbn or not input.title or not input.author or not input.year or not input.category:

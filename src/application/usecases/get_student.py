@@ -10,7 +10,7 @@ class GetStudent:
         student = self.student_dao.get_by_enrollment_id(enrollment_id)
         if not student: raise ValueError(f"Student with enrollment id {enrollment_id} not found")
         return Output(
-            id=student.get_id(),
+            id=student.id,
             name=student.name,
             age=student.age,
             major=student.major,

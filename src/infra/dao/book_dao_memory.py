@@ -5,6 +5,7 @@ class BookDaoMemory(BookDao):
     def __init__(self: "BookDaoMemory") -> None:
         self.books = [
             Book(
+                id="09459c22-57c9-41c1-a439-58b0092eab1d",
                 isbn="9781234567890",
                 title="Clean Code",
                 author="Robert C. Martin",
@@ -14,6 +15,7 @@ class BookDaoMemory(BookDao):
                 available_copies=2
             ),
             Book(
+                id="6b07813a-5332-4db8-bc48-7b6a1d10eb1d",
                 isbn="9780201616224",
                 title="Implementing Domain-Driven Design",
                 author="Vaughn Vernon",
@@ -35,7 +37,7 @@ class BookDaoMemory(BookDao):
     
     def get_by_id(self: "BookDaoMemory", id: str) -> Book | None:
         for book in self.books:
-            if book.get_id() == id:
+            if book.id == id:
                 return book
         return None
     
@@ -48,5 +50,5 @@ class BookDaoMemory(BookDao):
                 self.books[i] = book
                 return
             
-    def remove(self: "BookDaoMemory", book: Book) -> None:
-        self.books = [b for b in self.books if b.isbn != book.isbn]
+    def remove(self: "BookDaoMemory", id: str) -> None:
+        self.books = [b for b in self.books if b.id != id]

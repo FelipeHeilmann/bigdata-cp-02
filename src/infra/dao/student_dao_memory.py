@@ -5,6 +5,7 @@ class StudentDaoMemory(StudentDao):
     def __init__(self: "StudentDaoMemory") -> None:
         self.students = [
             Student(
+                id="2baef4b9-1930-4c48-8170-acba2ea62619",
                 name="Anthony Smith",
                 age=27,
                 major="Logistics",
@@ -12,6 +13,7 @@ class StudentDaoMemory(StudentDao):
                 enrollment_id="ENR557596"
             ),
             Student(
+                id="b6e7702b-4e72-4c11-afa0-2301f294eeaf",
                 name="Emily Johnson",
                 age=22,
                 major="Finance",
@@ -31,6 +33,6 @@ class StudentDaoMemory(StudentDao):
     
     def get_by_id(self: "StudentDaoMemory", id: str) -> Student | None:
         for student in self.students:
-            if student.get_id() == id:
+            if student.id == id:
                 return student
         return None

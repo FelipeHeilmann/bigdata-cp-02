@@ -17,14 +17,14 @@ class GetLoan:
         book = self.book_dao.get_by_id(loan.book_id)
         student = self.student_dao.get_by_id(loan.student_id)
         return Output(
-            id=loan.get_id(),
+            id=loan.id,
             book=BookOutput(
-                id=book.get_id(),
+                id=book.id,
                 isbn=book.isbn,
                 title=book.title
             ),
             student=StudentOutput(
-                id=student.get_id(),
+                id=student.id,
                 enrollment_id=student.enrollment_id,
                 name=student.name
             ),
@@ -35,7 +35,7 @@ class GetLoan:
     def _get_loan_status(self: "GetLoan", loan: Loan, date: datetime) -> str:
         if loan.return_date is not None:
             return "returned"
-        if loan.date + timedelta(days=14) < date:
+        if loan.date + timedelta(days=7) < date:
             return "overdue"
         return "active"
     

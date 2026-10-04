@@ -10,7 +10,7 @@ class GetBookByISBN:
         book = self.book_dao.get_by_isbn(isbn)
         if book is None: raise ValueError(f"Book with ISBN {isbn} not found")
         return Output(
-            id=book.get_id(),
+            id=book.id,
             isbn=book.isbn,
             title=book.title,
             author=book.author,

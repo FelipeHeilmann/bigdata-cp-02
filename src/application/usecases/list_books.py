@@ -10,7 +10,7 @@ class ListBooks:
     def execute(self: "ListBooks") -> List[Output]:
         books = self.book_dao.list_books()
         return [Output(
-            id=book.get_id(),
+            id=book.id,
             isbn=book.isbn,
             title=book.title,
             author=book.author,
