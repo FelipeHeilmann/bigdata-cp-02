@@ -7,6 +7,7 @@ book_dao = BookDaoMemory()
 def test_get_book_should_return_book_by_isbn():
     get_book_by_isbn = GetBookByISBN(book_dao)
     book = get_book_by_isbn.execute("9781234567890")
+    assert book.id is not None
     assert book.isbn == "9781234567890"
     assert book.title == "Clean Code"
     assert book.author == "Robert C. Martin"

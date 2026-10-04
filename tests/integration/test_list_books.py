@@ -9,6 +9,7 @@ def test_list_books_return_list():
     assert isinstance(result, list)
     assert len(result) == 2
     first_book = result[0]
+    assert first_book.id is not None
     assert first_book.isbn == "9781234567890"
     assert first_book.title == "Clean Code"
     assert first_book.author == "Robert C. Martin"
@@ -17,6 +18,7 @@ def test_list_books_return_list():
     assert first_book.copies == 3
     assert first_book.available_copies == 2
     second_book = result[1]
+    assert second_book.id is not None
     assert second_book.isbn == "9780201616224"
     assert second_book.title == "Implementing Domain-Driven Design"
     assert second_book.author == "Vaughn Vernon"

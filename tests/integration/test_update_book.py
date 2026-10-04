@@ -18,12 +18,9 @@ def test_update_book_should_update_book_properly():
         5,
     )
     output_create_book = create_book.execute(input_create_book)
-
     assert output_create_book.id is not None
-
     get_book_by_isbn = GetBookByISBN(book_dao)
     book = get_book_by_isbn.execute("9783161484100")
-
     assert book.isbn == "9783161484100"
     assert book.title == "Clean architecture"
     assert book.author == "Robert C. Martin"
@@ -31,7 +28,6 @@ def test_update_book_should_update_book_properly():
     assert book.category == "Software Engineering"
     assert book.copies == 5
     assert book.available_copies == 5
-
     update_book = UpdateBook(book_dao)
     input_update_book = InputUpdateBook(
         "9783161484100",
@@ -43,9 +39,7 @@ def test_update_book_should_update_book_properly():
         10,
     )
     update_book.execute(input_update_book)
-
     output_updated_book = get_book_by_isbn.execute("9783161484100")
-
     assert output_updated_book.isbn == "9783161484100"
     assert output_updated_book.title == "Clean architecture updated"
     assert output_updated_book.author == "Robert C. Martin"
@@ -79,8 +73,7 @@ def test_update_book_should_throw_exception_when_input_is_invalid_with_one_field
         "2017",
         5,
         5,
-    )
-        
+    ) 
     with pytest.raises(ValueError) as excinfo:
         update_book.execute(input)
     assert excinfo.value.args[0] == "Invalid input: All fields are required"  
@@ -96,7 +89,6 @@ def test_update_book_should_throw_exception_when_input_is_invalid_with_copies_an
         0,
         0,
     )
-        
     with pytest.raises(ValueError) as excinfo:
         update_book.execute(input)
     assert excinfo.value.args[0] == "Invalid input: Copies and available copies must be non-negative"

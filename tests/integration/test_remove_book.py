@@ -17,12 +17,9 @@ def test_remove_book_should_remove_book_properly():
         5,
         5,
     )
-
     create_book.execute(input)
-
     remove_book = RemoveBook(book_dao)
     remove_book.execute("9783161484100")
-
     get_book = GetBookByISBN(book_dao)
     with pytest.raises(ValueError) as excinfo:
         get_book.execute("9783161484100")

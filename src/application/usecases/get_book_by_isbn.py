@@ -8,9 +8,9 @@ class GetBookByISBN:
 
     def execute(self, isbn: str) -> "Output":
         book = self.book_dao.get_book_by_isbn(isbn)
-        if book is None:
-            raise ValueError(f"Book with ISBN {isbn} not found")
+        if book is None: raise ValueError(f"Book with ISBN {isbn} not found")
         return Output(
+            id=book.get_id(),
             isbn=book.isbn,
             title=book.title,
             author=book.author,
@@ -22,6 +22,7 @@ class GetBookByISBN:
     
 @dataclass 
 class Output:
+    id: str
     isbn: str
     title: str
     author: str
