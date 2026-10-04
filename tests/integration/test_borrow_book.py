@@ -14,13 +14,14 @@ from src.infra.dao.book_dao_mongo import BookDaoMongo
 from src.infra.dao.student_dao_memory import StudentDaoMemory
 from src.infra.dao.student_dao_mongo import StudentDaoMongo
 from src.infra.dao.loan_dao_memory import LoanDaoMemory
+from src.infra.dao.loan_dao_mongo import LoanDaoMongo
 from datetime import datetime
 import pytest
 from tests.helpers import random_isbn, random_enrollment_id
 
 book_dao = BookDaoMongo()
 student_dao = StudentDaoMongo()
-loan_dao = LoanDaoMemory()
+loan_dao = LoanDaoMongo()
 
 def test_borrow_book_should_borrow_book_successfully():
     isbn = random_isbn()
