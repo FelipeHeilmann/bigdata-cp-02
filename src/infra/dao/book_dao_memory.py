@@ -35,3 +35,9 @@ class BookDaoMemory(BookDAO):
     
     def save(self: "BookDaoMemory", book: Book) -> None:
         self.books.append(book)
+
+    def update(self: "BookDaoMemory", book: Book) -> None:
+        for i, b in enumerate(self.books):
+            if b.isbn == book.isbn:
+                self.books[i] = book
+                return

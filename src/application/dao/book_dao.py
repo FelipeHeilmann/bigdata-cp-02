@@ -14,3 +14,7 @@ class BookDAO(ABC):
     @abstractmethod
     def save(self: "BookDAO", book: Book) -> None:
         pass
+
+    @abstractmethod
+    def update(self: "BookDAO", book: Book) -> None:
+        pass
