@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from src.application.dao.student_dao import StudentDao
+from src.application.errors.application_erros import StudentNotFoundError
 
 class GetStudent:
     def __init__(self: "GetStudent", student_dao: StudentDao) -> None:
@@ -8,7 +9,7 @@ class GetStudent:
 
     def execute(self: "GetStudent", enrollment_id: str) -> Output:
         student = self.student_dao.get_by_enrollment_id(enrollment_id)
-        if not student: raise ValueError(f"Student with enrollment id {enrollment_id} not found")
+        if not student: raise StudentNotFoundError("enrollment id", enrollment_id)
         return Output(
             id=student.id,
             name=student.name,

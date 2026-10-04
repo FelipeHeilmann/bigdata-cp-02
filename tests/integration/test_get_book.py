@@ -1,4 +1,7 @@
 from src.infra.dao.book_dao_memory import BookDaoMemory
+from src.application.errors.application_erros import (
+    BookNotFoundError,
+)
 from src.application.usecases.get_book_by_isbn import GetBookByISBN
 import pytest
 
@@ -18,6 +21,6 @@ def test_get_book_should_return_book_by_isbn():
 
 def test_get_book_should_throw_exception_when_book_not_found():
     get_book_by_isbn = GetBookByISBN(book_dao)
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(BookNotFoundError) as excinfo:
         get_book_by_isbn.execute("978013235088")  
     assert excinfo.value.args[0] == "Book with ISBN 978013235088 not found"

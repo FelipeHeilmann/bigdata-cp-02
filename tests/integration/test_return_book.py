@@ -4,6 +4,9 @@ from src.application.usecases.create_student import CreateStudent, Input as Inpu
 from src.application.usecases.get_book_by_isbn import GetBookByISBN
 from src.application.usecases.get_loan import GetLoan
 from src.application.usecases.return_book import ReturnBook, Input as InputReturnBook
+from src.application.errors.application_erros import (
+    BookAlreadyReturnedError,
+)
 from src.infra.dao.book_dao_memory import BookDaoMemory
 from src.infra.dao.student_dao_memory import StudentDaoMemory
 from src.infra.dao.loan_dao_memory import LoanDaoMemory
@@ -130,7 +133,7 @@ def test_return_book_should_throw_exception_when_returning_same_book_twice():
     return_book = ReturnBook(loan_dao, book_dao)
     input_return_book = InputReturnBook(output.id, datetime(2024, 6, 2, 10, 25, 10))
     return_book.execute(input_return_book)
-    with raises(Exception) as execinfo:
+    with raises(BookAlreadyReturnedError) as execinfo:
         return_book.execute(input_return_book)
     assert execinfo.value.args[0] == "Book has already been returned"
     book_dao.remove(output_create_book.id)

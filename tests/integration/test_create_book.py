@@ -1,5 +1,9 @@
 from src.infra.dao.book_dao_memory import BookDaoMemory
 from src.application.usecases.create_book import CreateBook, Input
+from src.application.errors.application_erros import (
+    BookAlreadyExistsError, 
+    InvalidInputError
+)
 from src.application.usecases.get_book_by_isbn import GetBookByISBN 
 import pytest
 
@@ -40,7 +44,7 @@ def test_create_book_should_throw_exception_when_book_already_exists():
         3,
         3,
     )
-    with pytest.raises(KeyError) as excinfo:
+    with pytest.raises(BookAlreadyExistsError) as excinfo:
         create_book.execute(input)
     assert excinfo.value.args[0] == "Book with ISBN 9781234567890 already exists"
 
@@ -55,7 +59,7 @@ def test_create_book_should_throw_exception_when_input_is_invalid_with_one_field
         5,
         5,
     )
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(InvalidInputError) as excinfo:
         create_book.execute(input)
     assert excinfo.value.args[0] == "Invalid input: All fields are required"
 
@@ -70,7 +74,7 @@ def test_create_book_should_throw_exception_when_input_is_invalid_with_all_field
         0,
         0,
     )    
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(InvalidInputError) as excinfo:
         create_book.execute(input)
     assert excinfo.value.args[0] == "Invalid input: All fields are required"
 
@@ -85,7 +89,7 @@ def test_create_book_should_throw_exception_when_input_is_invalid_with_copies_an
         0,
         0,
     )  
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(InvalidInputError) as excinfo:
         create_book.execute(input)
     assert excinfo.value.args[0] == "Invalid input: Copies and available copies must be non-negative"
 
@@ -100,7 +104,7 @@ def test_create_book_should_throw_exception_when_input_is_invalid_with_copies_an
         5,
         2,
     )
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(InvalidInputError) as excinfo:
         create_book.execute(input)
     assert excinfo.value.args[0] == "Invalid input: Copies and available copies must be equal"
 
@@ -115,6 +119,6 @@ def test_create_book_should_throw_exception_when_input_is_invalid_with_isbn_inco
         5,
         5,
     )
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(InvalidInputError) as excinfo:
         create_book.execute(input)
     assert excinfo.value.args[0] == "Invalid input: ISBN must be a 13-digit number"

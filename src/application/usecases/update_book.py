@@ -1,6 +1,10 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from src.application.dao.book_dao import BookDao
+from src.application.errors.application_erros import (
+    BookNotFoundError, 
+    InvalidInputError
+)
 
 class UpdateBook:
     def __init__(self: "UpdateBook", book_dao: "BookDao") -> None:
@@ -9,7 +13,7 @@ class UpdateBook:
     def execute(self: "UpdateBook", input: Input) -> None:
         self._validate_input(input)
         book = self.book_dao.get_by_isbn(input.isbn)
-        if not book: raise KeyError(f"Book with ISBN {input.isbn} not found")
+        if not book: raise BookNotFoundError("ISBN", input.isbn)
         book.title = input.title
         book.author = input.author
         book.year = input.year
@@ -20,9 +24,9 @@ class UpdateBook:
 
     def _validate_input(self: "UpdateBook", input: Input) -> None:
         if not input.isbn or not input.title or not input.author or not input.year or not input.category or input.copies < 0 or input.available_copies < 0:
-            raise ValueError("Invalid input: All fields are required")
+            raise InvalidInputError("Invalid input: All fields are required")
         if input.copies == 0 and input.available_copies == 0:
-            raise ValueError("Invalid input: Copies and available copies must be non-negative")
+            raise InvalidInputError("Invalid input: Copies and available copies must be non-negative")
 
 
 @dataclass

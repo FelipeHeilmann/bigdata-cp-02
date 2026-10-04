@@ -1,6 +1,10 @@
 from src.infra.dao.book_dao_memory import BookDaoMemory
 from src.application.usecases.update_book import UpdateBook, Input as InputUpdateBook
 from src.application.usecases.create_book import CreateBook, Input as InputCreateBook
+from src.application.errors.application_erros import (
+    BookNotFoundError,
+    InvalidInputError
+)
 from src.application.usecases.get_book_by_isbn import GetBookByISBN
 import pytest
 
@@ -59,7 +63,7 @@ def test_update_book_should_raise_exception_when_book_not_found():
         10,
         10,
     )
-    with pytest.raises(KeyError) as excinfo:
+    with pytest.raises(BookNotFoundError) as excinfo:
         update_book.execute(input_update_book)
     assert excinfo.value.args[0] == "Book with ISBN 9783161484108 not found"
 
@@ -74,7 +78,7 @@ def test_update_book_should_throw_exception_when_input_is_invalid_with_one_field
         5,
         5,
     ) 
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(InvalidInputError) as excinfo:
         update_book.execute(input)
     assert excinfo.value.args[0] == "Invalid input: All fields are required"  
 
@@ -89,6 +93,6 @@ def test_update_book_should_throw_exception_when_input_is_invalid_with_copies_an
         0,
         0,
     )
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(InvalidInputError) as excinfo:
         update_book.execute(input)
     assert excinfo.value.args[0] == "Invalid input: Copies and available copies must be non-negative"

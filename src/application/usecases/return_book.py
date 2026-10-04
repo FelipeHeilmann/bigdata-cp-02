@@ -1,8 +1,10 @@
 from __future__ import annotations
 from src.application.dao.book_dao import BookDao
 from src.application.dao.loan_dao import LoanDao
+from src.application.errors.application_erros import BookAlreadyReturnedError
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+
 
 class ReturnBook:
     FINE_PER_DAY = 2.0 
@@ -12,7 +14,7 @@ class ReturnBook:
 
     def execute(self: "ReturnBook", input: Input) -> Output:
         loan = self.loan_dao.get_by_id(input.loan_id)
-        if loan.return_date is not None: raise Exception("Book has already been returned")
+        if loan.return_date is not None: raise BookAlreadyReturnedError()
         fine = self._calculate_fine(loan, input.return_date)
         book = self.book_dao.get_by_id(loan.book_id)
         book.available_copies += 1

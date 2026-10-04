@@ -1,6 +1,7 @@
 from __future__ import annotations
 from src.application.dao.book_dao import BookDao
 from dataclasses import dataclass
+from src.application.errors.application_erros import BookNotFoundError
 
 class GetBookByISBN:
     def __init__(self: "GetBookByISBN", book_dao: "BookDao") -> None:
@@ -8,7 +9,7 @@ class GetBookByISBN:
 
     def execute(self, isbn: str) -> "Output":
         book = self.book_dao.get_by_isbn(isbn)
-        if book is None: raise ValueError(f"Book with ISBN {isbn} not found")
+        if book is None: raise BookNotFoundError("ISBN", isbn)
         return Output(
             id=book.id,
             isbn=book.isbn,
