@@ -9,6 +9,7 @@ from src.application.errors.application_erros import (
 )
 from src.infra.dao.book_dao_memory import BookDaoMemory
 from src.infra.dao.book_dao_mongo import BookDaoMongo
+from src.infra.dao.student_dao_mongo import StudentDaoMongo
 from src.infra.dao.student_dao_memory import StudentDaoMemory
 from src.infra.dao.loan_dao_memory import LoanDaoMemory
 from datetime import datetime
@@ -16,7 +17,7 @@ from tests.helpers import random_isbn, random_enrollment_id
 import pytest
 
 book_dao = BookDaoMongo()
-student_dao = StudentDaoMemory()
+student_dao = StudentDaoMongo()
 loan_dao = LoanDaoMemory()
 
 def test_remove_book_should_remove_book_properly():
@@ -77,3 +78,4 @@ def test_remove_book_should_raise_error_when_book_is_borrowed():
         remove_book.execute(isbn)
     assert excinfo.value.args[0] == f"Book with ISBN {isbn} is currently borrowed and cannot be deleted"
     book_dao.remove(output_create_book.id)
+    student_dao.remove(output_create_student.id)

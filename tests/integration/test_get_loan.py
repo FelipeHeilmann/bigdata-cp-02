@@ -6,12 +6,13 @@ from src.application.usecases.get_loan import GetLoan
 from src.infra.dao.book_dao_memory import BookDaoMemory
 from src.infra.dao.book_dao_mongo import BookDaoMongo
 from src.infra.dao.student_dao_memory import StudentDaoMemory
+from src.infra.dao.student_dao_mongo import StudentDaoMongo
 from src.infra.dao.loan_dao_memory import LoanDaoMemory
 from tests.helpers import random_isbn, random_enrollment_id
 from datetime import datetime
 
 book_dao = BookDaoMongo()
-student_dao = StudentDaoMemory()
+student_dao = StudentDaoMongo()
 loan_dao = LoanDaoMemory()
 
 def test_get_loan_should_get_loan_successfully_with_status_active():
@@ -53,6 +54,7 @@ def test_get_loan_should_get_loan_successfully_with_status_active():
     assert output_get_book.copies == 5
     assert output_get_book.available_copies == 4
     book_dao.remove(output_create_book.id)
+    student_dao.remove(output_create_student.id)
 
 def test_get_loan_should_get_loan_successfully_with_status_overdue():
     create_book = CreateBook(book_dao)
@@ -88,3 +90,4 @@ def test_get_loan_should_get_loan_successfully_with_status_overdue():
     assert output_get_loan.student.name == "John Doe"
     assert output_get_loan.date == "2024-06-01T10:25:10"
     assert output_get_loan.status == "overdue"  
+    student_dao.remove(output_create_student.id)

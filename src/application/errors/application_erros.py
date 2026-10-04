@@ -42,3 +42,8 @@ class StudentHasOverdueLoansError(Exception):
     def __init__(self):
         self.message = "Student has overdue loans"
         super().__init__(self.message)
+
+class StudentAlreadyExistsError(Exception):
+    def __init__(self, field: str, value: str):
+        self.message = f"Student with {field} {value} already exists"
+        super().__init__(self.message)

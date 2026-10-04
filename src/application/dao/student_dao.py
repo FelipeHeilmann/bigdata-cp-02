@@ -13,3 +13,7 @@ class StudentDao(ABC):
     @abstractmethod
     def get_by_id(self: "StudentDao", id: str) -> Student | None:
         pass
+
+    @abstractmethod
+    def remove(self: "StudentDao", id: str) -> None:
+        pass

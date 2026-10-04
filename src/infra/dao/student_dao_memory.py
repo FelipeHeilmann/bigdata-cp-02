@@ -37,3 +37,6 @@ class StudentDaoMemory(StudentDao):
             if student.id == id:
                 return student
         return None
+    
+    def remove(self: "StudentDaoMemory", id: str) -> None:
+        self.students = [student for student in self.students if student.id != id]

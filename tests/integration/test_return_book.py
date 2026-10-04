@@ -9,6 +9,7 @@ from src.application.errors.application_erros import (
 )
 from src.infra.dao.book_dao_memory import BookDaoMemory
 from src.infra.dao.book_dao_mongo import BookDaoMongo
+from src.infra.dao.student_dao_mongo import StudentDaoMongo
 from src.infra.dao.student_dao_memory import StudentDaoMemory
 from src.infra.dao.loan_dao_memory import LoanDaoMemory
 from datetime import datetime 
@@ -16,7 +17,7 @@ from tests.helpers import random_isbn, random_enrollment_id
 from pytest import raises
 
 book_dao = BookDaoMongo()
-student_dao = StudentDaoMemory()
+student_dao = StudentDaoMongo()
 loan_dao = LoanDaoMemory()
 
 def test_return_book_should_return_book_without_fine_successfully():
@@ -64,6 +65,7 @@ def test_return_book_should_return_book_without_fine_successfully():
     assert output_get_book.copies == 5
     assert output_get_book.available_copies == 5
     book_dao.remove(output_create_book.id)
+    student_dao.remove(output_create_student.id)
 
 def test_return_book_should_return_book_with_fine_successfully():
     create_book = CreateBook(book_dao)
@@ -110,6 +112,7 @@ def test_return_book_should_return_book_with_fine_successfully():
     assert output_get_book.copies == 5
     assert output_get_book.available_copies == 5
     book_dao.remove(output_create_book.id)
+    student_dao.remove(output_create_student.id)
 
 def test_return_book_should_throw_exception_when_returning_same_book_twice():
     create_book = CreateBook(book_dao)
@@ -145,3 +148,4 @@ def test_return_book_should_throw_exception_when_returning_same_book_twice():
         return_book.execute(input_return_book)
     assert execinfo.value.args[0] == "Book has already been returned"
     book_dao.remove(output_create_book.id)
+    student_dao.remove(output_create_student.id)

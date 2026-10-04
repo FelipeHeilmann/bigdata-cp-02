@@ -1,4 +1,5 @@
 from src.infra.dao.book_dao_memory import BookDaoMemory
+from src.infra.dao.book_dao_mongo import BookDaoMongo
 from src.application.usecases.update_book import UpdateBook, Input as InputUpdateBook
 from src.application.usecases.create_book import CreateBook, Input as InputCreateBook
 from src.application.errors.application_erros import (
@@ -9,7 +10,7 @@ from src.application.usecases.get_book_by_isbn import GetBookByISBN
 from tests.helpers import random_isbn
 import pytest
 
-book_dao = BookDaoMemory()
+book_dao = BookDaoMongo()
 
 def test_update_book_should_update_book_properly():
     create_book = CreateBook(book_dao)

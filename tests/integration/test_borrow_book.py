@@ -12,13 +12,14 @@ from src.application.errors.application_erros import (
 from src.infra.dao.book_dao_memory import BookDaoMemory
 from src.infra.dao.book_dao_mongo import BookDaoMongo
 from src.infra.dao.student_dao_memory import StudentDaoMemory
+from src.infra.dao.student_dao_mongo import StudentDaoMongo
 from src.infra.dao.loan_dao_memory import LoanDaoMemory
 from datetime import datetime
 import pytest
 from tests.helpers import random_isbn, random_enrollment_id
 
 book_dao = BookDaoMongo()
-student_dao = StudentDaoMemory()
+student_dao = StudentDaoMongo()
 loan_dao = LoanDaoMemory()
 
 def test_borrow_book_should_borrow_book_successfully():
@@ -60,6 +61,7 @@ def test_borrow_book_should_borrow_book_successfully():
     assert output_get_book.copies == 5
     assert output_get_book.available_copies == 4
     book_dao.remove(output_create_book.id)
+    student_dao.remove(output_create_student.id)
 
 def test_borrow_book_should_throw_exception_when_book_is_not_available():
     isbn = random_isbn()
@@ -91,6 +93,7 @@ def test_borrow_book_should_throw_exception_when_book_is_not_available():
         borrow_book.execute(InputBorrowBook(output_create_book.id, output_create_student.id, date))
     assert str(excinfo.value) == "Book is not available"
     book_dao.remove(output_create_book.id)
+    student_dao.remove(output_create_student.id)
 
 def test_borrow_book_should_throw_excption_when_student_has_more_than_3_active_loans():
     isbn1 = random_isbn()
@@ -160,6 +163,7 @@ def test_borrow_book_should_throw_excption_when_student_has_more_than_3_active_l
     book_dao.remove(output_create_book2.id)
     book_dao.remove(output_create_book3.id)
     book_dao.remove(output_create_book4.id)
+    student_dao.remove(output_create_student.id)
 
 def test_borrow_book_should_throw_exception_when_book_does_not_exist():
     enrollment_id = random_enrollment_id()
@@ -209,3 +213,4 @@ def test_borrow_book_should_throw_exception_when_student_has_overdue_loans():
         borrow_book.execute(InputBorrowBook(output_create_book.id, output_create_student.id, overdue_date))
     assert excinfo.value.args[0] == "Student has overdue loans"
     book_dao.remove(output_create_book.id)
+    student_dao.remove(output_create_student.id)
