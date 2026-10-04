@@ -1,9 +1,10 @@
 from src.application.dao.book_dao import BookDao
 from src.application.models.book import Book
+from typing import List
 
 class BookDaoMemory(BookDao):
     def __init__(self: "BookDaoMemory") -> None:
-        self.books = [
+        self.books: List[Book] = [
             Book(
                 id="09459c22-57c9-41c1-a439-58b0092eab1d",
                 isbn="9781234567890",

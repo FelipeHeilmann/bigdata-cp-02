@@ -15,7 +15,7 @@ loan_dao = LoanDaoMemory()
 
 def test_borrow_book_should_borrow_book_successfully():
     create_book = CreateBook(book_dao)
-    input = InputCreateBook(
+    input_create_book = InputCreateBook(
         "9783161484100",
         "Clean architecture",
         "Robert C. Martin",
@@ -24,7 +24,7 @@ def test_borrow_book_should_borrow_book_successfully():
         5,
         5,
     )
-    output_create_book = create_book.execute(input)
+    output_create_book = create_book.execute(input_create_book)
     create_student = CreateStudent(student_dao)
     input_student = InputCreateStudent(
         name="John Doe",
@@ -121,3 +121,48 @@ def test_borrow_book_should_throw_excption_when_student_has_more_than_3_active_l
     assert str(excinfo.value) == "Student has more than 3 active loans"
     book_dao.remove(output_create_book1.id)
     book_dao.remove(output_create_book2.id)
+
+def test_borrow_book_should_throw_exception_when_book_does_not_exist():
+    create_student = CreateStudent(student_dao)
+    input_student = InputCreateStudent(
+        name="John Doe",
+        enrollment_id="ENR551026",
+        age=20,
+        major="Computer Science",
+        email="johndoe@harvard.com"
+    )
+    output_create_student = create_student.execute(input_student)
+    date = datetime(2024, 6, 1, 10, 25, 10)
+    borrow_book = BorrowBook(loan_dao, book_dao)
+    with pytest.raises(Exception) as excinfo:
+        borrow_book.execute(InputBorrowBook("non-existent-book-id", output_create_student.id, date))
+    assert excinfo.value.args[0] == "Book not found"
+
+def test_borrow_book_should_throw_exception_when_student_has_overdue_loans():
+    create_book = CreateBook(book_dao)
+    input = InputCreateBook(
+        "9783161484100",
+        "Clean architecture",
+        "Robert C. Martin",
+        "Software Engineering",
+        "2017",
+        5,
+        5,
+    )
+    output_create_book = create_book.execute(input)
+    create_student = CreateStudent(student_dao)
+    input_student = InputCreateStudent(
+        name="John Doe",
+        enrollment_id="ENR551026",
+        age=20,
+        major="Computer Science",
+        email="johndoe@harvard.com"
+    )
+    output_create_student = create_student.execute(input_student)
+    date = datetime(2024, 6, 1, 10, 25, 10)
+    borrow_book = BorrowBook(loan_dao, book_dao)
+    borrow_book.execute(InputBorrowBook(output_create_book.id, output_create_student.id, date))
+    overdue_date = datetime(2024, 6, 11, 10, 25, 10)
+    with pytest.raises(Exception) as excinfo:
+        borrow_book.execute(InputBorrowBook(output_create_book.id, output_create_student.id, overdue_date))
+    assert excinfo.value.args[0] == "Student has overdue loans"

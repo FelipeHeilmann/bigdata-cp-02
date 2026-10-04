@@ -1,9 +1,10 @@
 from src.application.dao.student_dao import StudentDao
 from src.application.models.student import Student
+from typing import List
 
 class StudentDaoMemory(StudentDao):
     def __init__(self: "StudentDaoMemory") -> None:
-        self.students = [
+        self.students: List[Student] = [
             Student(
                 id="2baef4b9-1930-4c48-8170-acba2ea62619",
                 name="Anthony Smith",

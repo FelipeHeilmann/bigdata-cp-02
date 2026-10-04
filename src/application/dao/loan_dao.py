@@ -15,3 +15,11 @@ class LoanDao(ABC):
     @abstractmethod
     def get_active_loans_by_student_id(self: "LoanDao", student_id: str, date: datetime) -> List[Loan]:
         pass
+
+    @abstractmethod
+    def get_overdue_loans_by_student_id(self: "LoanDao", student_id: str, date: datetime) -> List[Loan]:
+        pass
+
+    @abstractmethod
+    def update(self: "LoanDao", loan: Loan) -> None:
+        pass

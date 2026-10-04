@@ -14,7 +14,10 @@ class BorrowBook:
     def execute(self: "BorrowBook", input: Input) -> Output:
         active_loans = self.loan_dao.get_active_loans_by_student_id(input.student_id, input.date)
         if len(active_loans) >= 3: raise Exception("Student has more than 3 active loans")
+        overdue_loans = self.loan_dao.get_overdue_loans_by_student_id(input.student_id, input.date)
+        if len(overdue_loans) > 0: raise Exception("Student has overdue loans")
         book = self.book_dao.get_by_id(input.book_id)
+        if book is None: raise ValueError("Book not found")
         if book.available_copies <= 0: raise Exception("Book is not available")
         loan = Loan(
             str(uuid4()),

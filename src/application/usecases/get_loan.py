@@ -29,7 +29,9 @@ class GetLoan:
                 name=student.name
             ),
             date=loan.date.isoformat(),
-            status=self._get_loan_status(loan, date)
+            status=self._get_loan_status(loan, date),
+            return_date=loan.return_date.isoformat() if loan.return_date else None,
+            fine=loan.fine
         )
     
     def _get_loan_status(self: "GetLoan", loan: Loan, date: datetime) -> str:
@@ -45,6 +47,8 @@ class Output:
     book: BookOutput
     student: StudentOutput
     date: str
+    return_date: str | None
+    fine: float
     status: str
 
 @dataclass 
