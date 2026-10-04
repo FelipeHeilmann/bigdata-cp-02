@@ -1,4 +1,5 @@
 from src.infra.dao.book_dao_memory import BookDaoMemory
+from src.infra.dao.book_dao_mongo import BookDaoMongo
 from src.application.usecases.create_book import CreateBook, Input
 from src.application.errors.application_erros import (
     BookAlreadyExistsError, 
@@ -6,13 +7,15 @@ from src.application.errors.application_erros import (
 )
 from src.application.usecases.get_book_by_isbn import GetBookByISBN 
 import pytest
+from tests.helpers import random_isbn
 
-book_dao = BookDaoMemory()
+book_dao = BookDaoMongo()
 
 def test_create_book_should_create_book_properly():
+    isbn = random_isbn()
     create_book = CreateBook(book_dao)
     input = Input(
-        "9783161484100",
+        isbn,
         "Clean architecture",
         "Robert C. Martin",
         "Software Engineering",
@@ -23,20 +26,22 @@ def test_create_book_should_create_book_properly():
     output_create_book = create_book.execute(input)
     assert output_create_book.id is not None
     get_book_by_isbn = GetBookByISBN(book_dao)
-    book = get_book_by_isbn.execute("9783161484100")
+    book = get_book_by_isbn.execute(isbn)
     assert book.id is not None
-    assert book.isbn == "9783161484100"
+    assert book.isbn == isbn
     assert book.title == "Clean architecture"
     assert book.author == "Robert C. Martin"
     assert book.year == "2017"
     assert book.category == "Software Engineering"
     assert book.copies == 5
     assert book.available_copies == 5
+    book_dao.remove(book.id)
 
 def test_create_book_should_throw_exception_when_book_already_exists():
+    isbn = random_isbn()
     create_book = CreateBook(book_dao)
     input = Input(
-        "9781234567890",
+        isbn,
         "Clean Code",
         "Robert C. Martin",
         "Software Engineering",
@@ -44,9 +49,11 @@ def test_create_book_should_throw_exception_when_book_already_exists():
         3,
         3,
     )
+    output_create_book = create_book.execute(input)
     with pytest.raises(BookAlreadyExistsError) as excinfo:
         create_book.execute(input)
-    assert excinfo.value.args[0] == "Book with ISBN 9781234567890 already exists"
+    assert excinfo.value.args[0] == f"Book with ISBN {isbn} already exists"
+    book_dao.remove(output_create_book.id)
 
 def test_create_book_should_throw_exception_when_input_is_invalid_with_one_field_empty():
     create_book = CreateBook(book_dao)

@@ -8,19 +8,22 @@ from src.application.errors.application_erros import (
     BookAlreadyReturnedError,
 )
 from src.infra.dao.book_dao_memory import BookDaoMemory
+from src.infra.dao.book_dao_mongo import BookDaoMongo
 from src.infra.dao.student_dao_memory import StudentDaoMemory
 from src.infra.dao.loan_dao_memory import LoanDaoMemory
 from datetime import datetime 
+from tests.helpers import random_isbn, random_enrollment_id
 from pytest import raises
 
-book_dao = BookDaoMemory()
+book_dao = BookDaoMongo()
 student_dao = StudentDaoMemory()
 loan_dao = LoanDaoMemory()
 
 def test_return_book_should_return_book_without_fine_successfully():
     create_book = CreateBook(book_dao)
+    isbn = random_isbn()
     input_create_book = InputCreateBook(
-        "9783161484100",
+        isbn,
         "Clean architecture",
         "Robert C. Martin",
         "Software Engineering",
@@ -30,9 +33,10 @@ def test_return_book_should_return_book_without_fine_successfully():
     )
     output_create_book = create_book.execute(input_create_book)
     create_student = CreateStudent(student_dao)
+    enrollment_id = random_enrollment_id()
     input_student = InputCreateStudent(
         name="John Doe",
-        enrollment_id="ENR551026",
+        enrollment_id=enrollment_id,
         age=20,
         major="Computer Science",
         email="johndoe@harvard.com"
@@ -47,24 +51,25 @@ def test_return_book_should_return_book_without_fine_successfully():
     output_return_book = return_book.execute(input_return_book)
     get_loan = GetLoan(loan_dao, book_dao, student_dao)
     output_get_loan = get_loan.execute(output_return_book.id, datetime(2024, 6, 3, 10, 25, 10))
-    assert output_get_loan.book.isbn == "9783161484100"
+    assert output_get_loan.book.isbn == isbn
     assert output_get_loan.book.title == "Clean architecture"
-    assert output_get_loan.student.enrollment_id == "ENR551026"
+    assert output_get_loan.student.enrollment_id == enrollment_id
     assert output_get_loan.student.name == "John Doe"
     assert output_get_loan.date == "2024-06-01T10:25:10"
     assert output_get_loan.status == "returned"
     assert output_get_loan.return_date == "2024-06-02T10:25:10"
     assert output_get_loan.fine == 0
     get_book = GetBookByISBN(book_dao)
-    output_get_book = get_book.execute("9783161484100")
+    output_get_book = get_book.execute(isbn)
     assert output_get_book.copies == 5
     assert output_get_book.available_copies == 5
     book_dao.remove(output_create_book.id)
 
 def test_return_book_should_return_book_with_fine_successfully():
     create_book = CreateBook(book_dao)
+    isbn = random_isbn()
     input_create_book = InputCreateBook(
-        "9783161484100",
+        isbn,
         "Clean architecture",
         "Robert C. Martin",
         "Software Engineering",
@@ -74,9 +79,10 @@ def test_return_book_should_return_book_with_fine_successfully():
     )
     output_create_book = create_book.execute(input_create_book)
     create_student = CreateStudent(student_dao)
+    enrollment_id = random_enrollment_id()
     input_student = InputCreateStudent(
         name="John Doe",
-        enrollment_id="ENR551026",
+        enrollment_id=enrollment_id,
         age=20,
         major="Computer Science",
         email="johndoe@harvard.com"
@@ -91,24 +97,25 @@ def test_return_book_should_return_book_with_fine_successfully():
     output_return_book = return_book.execute(input_return_book)
     get_loan = GetLoan(loan_dao, book_dao, student_dao)
     output_get_loan = get_loan.execute(output_return_book.id, datetime(2024, 6, 11, 10, 25, 10))
-    assert output_get_loan.book.isbn == "9783161484100"
+    assert output_get_loan.book.isbn == isbn
     assert output_get_loan.book.title == "Clean architecture"
-    assert output_get_loan.student.enrollment_id == "ENR551026"
+    assert output_get_loan.student.enrollment_id == enrollment_id
     assert output_get_loan.student.name == "John Doe"
     assert output_get_loan.date == "2024-06-01T10:25:10"
     assert output_get_loan.status == "returned"
     assert output_get_loan.return_date == "2024-06-10T10:25:10"
     assert output_get_loan.fine == 4.0
     get_book = GetBookByISBN(book_dao)
-    output_get_book = get_book.execute("9783161484100")
+    output_get_book = get_book.execute(isbn)
     assert output_get_book.copies == 5
     assert output_get_book.available_copies == 5
     book_dao.remove(output_create_book.id)
 
 def test_return_book_should_throw_exception_when_returning_same_book_twice():
     create_book = CreateBook(book_dao)
+    isbn = random_isbn()
     input_create_book = InputCreateBook(
-        "9783161484100",
+        isbn,
         "Clean architecture",
         "Robert C. Martin",
         "Software Engineering",
@@ -118,9 +125,10 @@ def test_return_book_should_throw_exception_when_returning_same_book_twice():
     )
     output_create_book = create_book.execute(input_create_book)
     create_student = CreateStudent(student_dao)
+    enrollment_id = random_enrollment_id()
     input_student = InputCreateStudent(
         name="John Doe",
-        enrollment_id="ENR551026",
+        enrollment_id=enrollment_id,
         age=20,
         major="Computer Science",
         email="johndoe@harvard.com"

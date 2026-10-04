@@ -27,7 +27,7 @@ class CreateBook:
             available_copies=input.available_copies
         )
         self.book_dao.save(book)
-        return Output(id=book.id)
+        return Output(id=book.id, isbn=book.isbn)
     
     def _validate_input(self: "CreateBook", input: Input) -> None:
         if not input.isbn or not input.title or not input.author or not input.year or not input.category:
@@ -52,3 +52,4 @@ class Input:
 @dataclass
 class Output:
     id: str
+    isbn: str

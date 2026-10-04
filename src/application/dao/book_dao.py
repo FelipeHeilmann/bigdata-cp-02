@@ -24,5 +24,5 @@ class BookDao(ABC):
         pass
 
     @abstractmethod
-    def remove(self: "BookDao", book: Book) -> None:
+    def remove(self: "BookDao", id: str) -> None:
         pass

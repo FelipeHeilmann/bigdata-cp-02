@@ -6,14 +6,16 @@ from src.application.errors.application_erros import (
     InvalidInputError
 )
 from src.application.usecases.get_book_by_isbn import GetBookByISBN
+from tests.helpers import random_isbn
 import pytest
 
 book_dao = BookDaoMemory()
 
 def test_update_book_should_update_book_properly():
     create_book = CreateBook(book_dao)
+    isbn = random_isbn()
     input_create_book = InputCreateBook(
-        "9783161484100",
+        isbn,
         "Clean architecture",
         "Robert C. Martin",
         "Software Engineering",
@@ -24,8 +26,8 @@ def test_update_book_should_update_book_properly():
     output_create_book = create_book.execute(input_create_book)
     assert output_create_book.id is not None
     get_book_by_isbn = GetBookByISBN(book_dao)
-    book = get_book_by_isbn.execute("9783161484100")
-    assert book.isbn == "9783161484100"
+    book = get_book_by_isbn.execute(isbn)
+    assert book.isbn == isbn
     assert book.title == "Clean architecture"
     assert book.author == "Robert C. Martin"
     assert book.year == "2017"
@@ -34,7 +36,7 @@ def test_update_book_should_update_book_properly():
     assert book.available_copies == 5
     update_book = UpdateBook(book_dao)
     input_update_book = InputUpdateBook(
-        "9783161484100",
+        isbn,
         "Clean architecture updated",
         "Robert C. Martin",
         "Software Engineering",
@@ -43,19 +45,21 @@ def test_update_book_should_update_book_properly():
         10,
     )
     update_book.execute(input_update_book)
-    output_updated_book = get_book_by_isbn.execute("9783161484100")
-    assert output_updated_book.isbn == "9783161484100"
+    output_updated_book = get_book_by_isbn.execute(isbn)
+    assert output_updated_book.isbn == isbn
     assert output_updated_book.title == "Clean architecture updated"
     assert output_updated_book.author == "Robert C. Martin"
     assert output_updated_book.year == "2018"
     assert output_updated_book.category == "Software Engineering"
     assert output_updated_book.copies == 10
     assert output_updated_book.available_copies == 10
+    book_dao.remove(output_create_book.id)
 
 def test_update_book_should_raise_exception_when_book_not_found():
     update_book = UpdateBook(book_dao)
+    isbn = random_isbn()
     input_update_book = InputUpdateBook(
-        "9783161484108",
+        isbn,
         "Clean architecture updated",
         "Robert C. Martin",
         "Software Engineering",
@@ -65,12 +69,13 @@ def test_update_book_should_raise_exception_when_book_not_found():
     )
     with pytest.raises(BookNotFoundError) as excinfo:
         update_book.execute(input_update_book)
-    assert excinfo.value.args[0] == "Book with ISBN 9783161484108 not found"
+    assert excinfo.value.args[0] == f"Book with ISBN {isbn} not found"
 
 def test_update_book_should_throw_exception_when_input_is_invalid_with_one_field_empty():
     update_book = UpdateBook(book_dao)
+    isbn = random_isbn()
     input = InputUpdateBook(
-        "9783161484100",
+        isbn,
         "",
         "Robert C. Martin",
         "Software Engineering",
@@ -84,8 +89,9 @@ def test_update_book_should_throw_exception_when_input_is_invalid_with_one_field
 
 def test_update_book_should_throw_exception_when_input_is_invalid_with_copies_and_available_copies_zero():
     update_book = UpdateBook(book_dao)
+    isbn = random_isbn()
     input = InputUpdateBook(
-        "9783161484100",
+        isbn,
         "Clean architecture",
         "Robert C. Martin",
         "Software Engineering",
