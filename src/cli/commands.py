@@ -8,7 +8,7 @@ from src.application.usecases.create_student import CreateStudent, Input as Crea
 from src.application.usecases.get_student import GetStudent
 from src.application.usecases.borrow_book import BorrowBook, Input as BorrowBookInput
 from src.application.usecases.return_book import ReturnBook, Input as ReturnBookInput
-from src.cli.prompts import ask_text, ask_int
+from src.cli.prompts import ask_text, ask_int, ask_datetime
 
 def create_book(book_dao) -> None:
     isbn = ask_text("ISBN (13 dígitos)")
@@ -84,10 +84,11 @@ def borrow_book(book_dao, student_dao, loan_dao) -> None:
         print_book(book)
     isbn = ask_text("ISBN do livro")
     enrollment_id = ask_text("Matrícula do estudante")
+    date = ask_datetime("Data do empréstimo")
     book = GetBookByISBN(book_dao).execute(isbn)
     student = GetStudent(student_dao).execute(enrollment_id)
     output = BorrowBook(loan_dao, book_dao).execute(BorrowBookInput(
-        book_id=book.id, student_id=student.id, date=datetime.now(),
+        book_id=book.id, student_id=student.id, date=date,
     ))
     print(f"Empréstimo realizado. ID do empréstimo: {output.id}")
 
@@ -106,8 +107,9 @@ def return_book(book_dao, student_dao, loan_dao) -> None:
         print(f"  Aluno: {student_info}")
         print(f"  Emprestado em: {loan.date:%d/%m/%Y %H:%M}")
     loan_id = ask_text("ID do empréstimo")
+    return_date = ask_datetime("Data da devolução")
     output = ReturnBook(loan_dao, book_dao).execute(ReturnBookInput(
-        loan_id=loan_id, return_date=datetime.now(),
+        loan_id=loan_id, return_date=return_date,
     ))
     print(f"Livro devolvido. Multa: R$ {output.fine:.2f}")
 
