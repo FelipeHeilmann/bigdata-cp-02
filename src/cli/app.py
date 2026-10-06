@@ -3,8 +3,9 @@ from src.cli.error_handler import handle_errors
 from src.infra.dao.book_dao_mongo import BookDaoMongo
 from src.infra.dao.loan_dao_mongo import LoanDaoMongo
 from src.infra.dao.student_dao_mongo import StudentDaoMongo
+from src.infra.dao.report_dao_mongo import ReportDaoMongo
 
-def build_menu(book_dao, student_dao, loan_dao) -> dict:
+def build_menu(book_dao, student_dao, loan_dao, report_dao) -> dict:
     return {
         "1": ("Criar livro", handle_errors(lambda: commands.create_book(book_dao))),
         "2": ("Listar livros", handle_errors(lambda: commands.list_books(book_dao))),
@@ -15,10 +16,11 @@ def build_menu(book_dao, student_dao, loan_dao) -> dict:
         "7": ("Buscar estudante", handle_errors(lambda: commands.get_student(student_dao))),
         "8": ("Emprestar livro", handle_errors(lambda: commands.borrow_book(book_dao, student_dao, loan_dao))),
         "9": ("Devolver livro", handle_errors(lambda: commands.return_book(book_dao, student_dao, loan_dao))),
+        "10": ("Relatórios", handle_errors(lambda: commands.reports(report_dao))),
     }
 
 def main() -> None:
-    menu = build_menu(BookDaoMongo(), StudentDaoMongo(), LoanDaoMongo())
+    menu = build_menu(BookDaoMongo(), StudentDaoMongo(), LoanDaoMongo(), ReportDaoMongo())
     try:
         while True:
             print("\n=== Biblioteca ===")

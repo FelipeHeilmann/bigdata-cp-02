@@ -133,7 +133,7 @@ O projeto segue a arquitetura hexagonal (portas e adaptadores). O núcleo da apl
 src/
 ├── application/
 │   ├── models/        # entidades: Book, Student, Loan
-│   ├── dao/           # interfaces (portas) de persistência: BookDao, StudentDao, LoanDao
+│   ├── dao/           # interfaces (portas) de persistência: BookDao, StudentDao, LoanDao, ReportDao
 │   ├── usecases/      # uma classe por operação: CreateBook, BorrowBook, ReturnBook...
 │   └── errors/        # ApplicationError e erros específicos de negócio
 ├── infra/
@@ -183,6 +183,17 @@ As interfaces em `application/dao/` (`BookDao`, `StudentDao`, `LoanDao`) são **
 
 - **`*_memory.py`**: listas em memória. Usadas nos testes, por serem rápidas e isoladas.
 - **`*_mongo.py`**: coleções `books`, `students` e `loans` no MongoDB. O `id` da entidade é gravado como `_id`, e as conversões modelo ↔ documento ficam dentro da própria DAO (`_to_document` e `_to_model`).
+
+Os relatórios (`ReportDao`) seguem a mesma ideia. Em `report_dao_mongo.py`, cada relatório é um **aggregation pipeline** sobre a coleção `loans`:
+
+| Relatório | Pipeline |
+|---|---|
+| 5 livros mais emprestados | `$group` por `book_id` → `$sort` → `$limit: 5` → `$lookup` em `books` para trazer o título |
+| Empréstimos por curso | `$lookup` em `students` → `$group` por `student.major` → `$sort` |
+| Alunos com empréstimos atrasados | `$match` (sem `return_date` e com mais de 7 dias) → `$lookup` em `students` e `books` → `$project` com nome, livro e dias de atraso |
+| Total arrecadado em multas | `$group` com `$sum` do campo `fine` |
+
+Os dias de atraso são contados a partir de uma data de referência informada na CLI (opção `10. Relatórios`), com a mesma regra da multa: prazo de 7 dias e dias completos de atraso.
 
 Trocar de banco significa escrever um novo adaptador, sem tocar nos casos de uso. Essa troca é exatamente o que os testes fazem ao rodar os mesmos cenários nas duas implementações.
 

@@ -8,6 +8,7 @@ from src.application.usecases.create_student import CreateStudent, Input as Crea
 from src.application.usecases.get_student import GetStudent
 from src.application.usecases.borrow_book import BorrowBook, Input as BorrowBookInput
 from src.application.usecases.return_book import ReturnBook, Input as ReturnBookInput
+from src.application.usecases.get_reports import GetReports, Input as GetReportsInput
 from src.cli.prompts import ask_text, ask_int, ask_datetime
 
 def create_book(book_dao) -> None:
@@ -112,6 +113,28 @@ def return_book(book_dao, student_dao, loan_dao) -> None:
         loan_id=loan_id, return_date=return_date,
     ))
     print(f"Livro devolvido. Multa: R$ {output.fine:.2f}")
+
+def reports(report_dao) -> None:
+    date = ask_datetime("Data de referência para atrasos")
+    output = GetReports(report_dao).execute(GetReportsInput(date=date))
+    print("\n--- 5 livros mais emprestados ---")
+    if not output.most_borrowed_books:
+        print("Nenhum empréstimo registrado.")
+    for position, book in enumerate(output.most_borrowed_books, start=1):
+        title = book.title or "(livro removido)"
+        print(f"{position}. {title} | {book.loans} empréstimo(s)")
+    print("\n--- Empréstimos por curso ---")
+    if not output.loans_by_major:
+        print("Nenhum empréstimo registrado.")
+    for item in output.loans_by_major:
+        print(f"- {item.major}: {item.loans} empréstimo(s)")
+    print("\n--- Alunos com empréstimos atrasados ---")
+    if not output.overdue_loans:
+        print("Nenhum empréstimo atrasado.")
+    for overdue in output.overdue_loans:
+        print(f"- {overdue.student_name} | {overdue.book_title} | {overdue.days_late} dia(s) de atraso")
+    print("\n--- Total arrecadado em multas ---")
+    print(f"R$ {output.total_fines:.2f}")
 
 def print_book(book) -> None:
     print(f"- {book.title} | {book.author} ({book.year}) | ISBN {book.isbn} | "
